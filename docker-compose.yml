@@ -1,0 +1,47 @@
+services:
+  tic-tac-toe:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+        VITE_APP_TITLE: "Tic Tac Toe"
+    image: shovon668/tic-tac-toe:latest
+    container_name: tic-tac-toe-app
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - tic-tac-toe-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    volumes:
+      - nginx-logs:/var/log/nginx
+    labels:
+      - "com.docker.compose.service=tic-tac-toe"
+      - "description=Tic Tac Toe React Application"
+
+networks:
+  tic-tac-toe-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.7.0/24
+
+volumes:
+  nginx-logs:
+    driver: local
