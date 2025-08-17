@@ -1,0 +1,14 @@
+name: List Changed Files
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  list-changed-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: List changed files since last commit
+        run: |
+          git diff --name-only HEAD^ HEAD || echo 'No previous commit.'
