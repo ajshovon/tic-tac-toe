@@ -1,0 +1,12 @@
+name: Run After List
+on:
+  workflow_run:
+    workflows: ["List Changed Files"]
+    types:
+      - completed
+jobs:
+  run-after-list:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo message
+        run: echo "This job runs after the list-changed-files workflow completes."
